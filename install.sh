@@ -6,3 +6,5 @@ mv diary-tmp/.diaryrc $HOME/
 mkdir $HOME/diary
 mv diary-tmp/templates $HOME/diary/
 rm -rf diary-tmp
+
+apt-get install uuid-runtime
