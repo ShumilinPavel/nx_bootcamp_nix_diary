@@ -1,9 +1,8 @@
 #!/bin/bash
 
 git clone https://github.com/ShumilinPavel/nx_bootcamp_nix_diary.git diary-tmp
-cd diary-tmp
-mv diary /usr/local/bin/
-mv .diaryrc $HOME/
+mv diary-tmp/diary /usr/local/bin/
+mv diary-tmp/.diaryrc $HOME/
 mkdir $HOME/diary
-mv templates $HOME/diary/
-rm -rf .
+mv diary-tmp/templates $HOME/diary/
+rm -rf diary-tmp
