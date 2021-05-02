@@ -1,0 +1,3 @@
+# export DIARY_NOTES_PATH="$HOME/diary"
+# export TEXT_EDITOR="nano"
+# export TEMPLATES_DIR="./templates"

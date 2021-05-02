@@ -1,0 +1,112 @@
+#!/bin/bash
+
+generateFileName() {
+    year=`date +%Y`
+    month=`date +%m`
+    directory_name="$DIARY_NOTES_PATH/$year/$month"
+
+    if [ ! -d $directory_name ]
+    then
+        mkdir -p $directory_name
+    fi
+    
+    id=`uuidgen`
+    timestamp=`date +%Y-%m-%d_%H-%M`
+
+    echo "$directory_name/${id}___$timestamp.md"
+}
+
+createNote() {
+    $TEXT_EDITOR `generateFileName`
+}
+
+help() {
+    echo "this is help"
+    echo "diary new
+diary new -t temp-name
+diary open id
+diary stats
+diary bin
+diary restore id
+diary backup
+diary head
+
+diary list
+diary list -r(removed)"
+}
+
+createFromTemplate() {
+    template=$1
+
+    if [ ! -f "$TEMPLATES_DIR/$1" ]
+    then
+        echo "'$template' template file not found"
+        return 1
+    fi
+
+    fileName=`generateFileName`
+
+    cp "$TEMPLATES_DIR/$template" $fileName
+    $TEXT_EDITOR $fileName
+}
+
+showStats() {
+    totalNotes=`find $DIARY_NOTES_PATH -type f | wc -l`
+    echo "Total notes: $totalNotes"
+
+}
+
+backup() {
+    tar czf diary-backup.tar.gz --directory=$DIARY_NOTES_PATH .
+    # + архивация шаблонов, rc файла
+    echo "Created backup 'diary-backup.tar.gz'"
+}
+
+createDefaultRcFile() {
+    echo "export DIARY_NOTES_PATH=\"$HOME/diary\"" > "$HOME/.diaryrc"
+    echo "export TEXT_EDITOR=\"nano\"" >> "$HOME/.diaryrc"
+    echo "export TEMPLATES_DIR=\"$HOME/diary/templates\"" >> "$HOME/.diaryrc"
+    
+    echo "created config file '$HOME/.diaryrc'"
+}
+
+
+#### MAIN ####
+if [[ ! -f "$HOME/.diaryrc" ]]
+then
+    createDefaultRcFile
+fi
+
+source "$HOME/.diaryrc"
+
+if [[ $# -eq 0 || $# -eq 1 && ($1 = "-h" || $1 = "--help") ]]
+then
+    help
+elif [[ $# -eq 1 && $1 = "new" ]]
+then
+    createNote
+elif [[ $# -eq 1 && $1 = "stats" ]]
+then
+    showStats
+elif [[ $# -eq 3 && $1 = "new" && $2 = '-t' ]]
+then
+    createFromTemplate $3
+elif [[ $# -eq 1 && $1 = "backup" ]]
+then
+    backup
+fi
+
+echo "complete"
+
+# diary new
+# diary new -t temp-name
+# diary open id
+# diary stats
+# diary bin
+# diary restore id
+# diary backup
+# diary head
+
+# diary list
+# diary list -r(removed)
+
