@@ -11,7 +11,7 @@ diary() {
         fi
         id=$(uuidgen)
         timestamp=$(date +%Y-%m-%d_%H-%M)
-        echo "$directory_name/${id}___$timestamp.md"
+        echo "$directoryName/${id}___$timestamp.md"
     }
 
     __createNote() {
