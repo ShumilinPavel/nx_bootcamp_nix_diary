@@ -19,8 +19,7 @@ diary() {
     }
 
     __help() {
-        echo 
-"Templates are located in '$TEMPLATES_DIR'
+        echo "Templates are located in '$TEMPLATES_DIR'
 Notes can be matched by some first characters of the id
 
 Available commands:
@@ -32,12 +31,10 @@ diary open <id>             Open note by <id>
 diary stats                 Show diary statistics
 diary delete <id>           Move note with <id> to recycle bin
 diary bin                   Show notes in recycle bin
-diary restore <id>          Restore note from recycle-bin
-diary backup                Make diary.tar.gz with notes
+diary restore <id>          Restore note from recycle bin
+diary backup                Make 'diary.tar.gz' with notes, templates and recycle bin if exists
 diary head                  Show last 5 notes head
-
-diary list
-diary list -r(removed)"
+diary list                  List all notes"
     }
 
     __createFromTemplate() {
@@ -60,7 +57,12 @@ diary list -r(removed)"
     }
 
     __backup() {
-        tar czf diary-backup.tar.gz $NOTES_DIR $TEMPLATES_DIR $RECYCLE_BIN_DIR
+        if [[ -d $RECYCLE_BIN_DIR ]]
+        then
+            tar czf diary-backup.tar.gz $NOTES_DIR $TEMPLATES_DIR $RECYCLE_BIN_DIR
+        else
+            tar czf diary-backup.tar.gz $NOTES_DIR $TEMPLATES_DIR
+        fi
         echo "Created backup 'diary-backup.tar.gz'"
     }
 
@@ -107,6 +109,51 @@ diary list -r(removed)"
         fi
     }
 
+    __showNotesInRecycleBin() {
+        if [[ -d $RECYCLE_BIN_DIR ]]
+        then
+            find $RECYCLE_BIN_DIR -type f
+        else
+            echo "Recycle bin does not exist"
+        fi
+    }
+
+    __restoreNoteById() {
+        if [[ -d $RECYCLE_BIN_DIR ]]
+        then
+            id=$1
+            file=$(find $RECYCLE_BIN_DIR -name "$id*")
+            fileCount=$(find $RECYCLE_BIN_DIR -name "$id*" | wc -l)
+            if [[ $fileCount == 1 ]]
+            then
+                year=${file: -19:-15}
+                month=${file: -14:-12}
+                mv $file $RECYCLE_BIN_DIR/$year/$month
+            elif [[ $fileCount = 0 ]]
+            then
+                echo "Note not found"
+            else
+                echo "Too many notes are matched. Enter id more precisely"
+            fi
+        else
+            echo "Recycle bin does not exist"
+        fi
+    }
+
+    __showHead() {
+        headFiles=( $(find $NOTES_DIR -type f -printf "%T@ %p\n" | sort -n | cut -d' ' -f2- | tail -n 5) )
+        for file in ${headFiles[@]}
+        do
+            id=${file: -58:-50}
+            date=${file: -19:-9}
+            echo "$id   $date   $(head -c 60 $file)"
+        done
+    }
+
+    __listNotes() {
+        find $NOTES_DIR -type f
+    }
+
 
     #### MAIN ####
     if [[ ! -f "$HOME/diary/.diaryrc" ]]
@@ -132,12 +179,24 @@ diary list -r(removed)"
     elif [[ $# -eq 1 && $1 = "backup" ]]
     then
         __backup
+    elif [[ $# -eq 1 && $1 = "bin" ]]
+    then
+        __showNotesInRecycleBin
+    elif [[ $# -eq 1 && $1 = "list" ]]
+    then
+        __listNotes
+    elif [[ $# -eq 1 && $1 = "head" ]]
+    then
+        __showHead
     elif [[ $# -eq 2 && $1 = "open" ]]
     then
         __openNoteById $2
     elif [[ $# -eq 2 && $1 = "delete" ]]
     then
         __deleteNoteById $2
+    elif [[ $# -eq 2 && $1 = "restore" ]]
+    then
+        __restoreNoteById $2
     fi
 
     echo "complete"
