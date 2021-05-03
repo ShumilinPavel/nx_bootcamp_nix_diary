@@ -26,7 +26,6 @@ Available commands:
 
 diary new                   Create new note
 diary new -t <template>     Create new note from <template> file
-
 diary open <id>             Open note by <id>
 diary stats                 Show diary statistics
 diary delete <id>           Move note with <id> to recycle bin
@@ -57,12 +56,7 @@ diary list                  List all notes"
     }
 
     __backup() {
-        if [[ -d $RECYCLE_BIN_DIR ]]
-        then
-            tar czf diary-backup.tar.gz $NOTES_DIR $TEMPLATES_DIR $RECYCLE_BIN_DIR
-        else
-            tar czf diary-backup.tar.gz $NOTES_DIR $TEMPLATES_DIR
-        fi
+        tar czf diary-backup.tar.gz $NOTES_DIR $TEMPLATES_DIR $RECYCLE_BIN_DIR
         echo "Created backup 'diary-backup.tar.gz'"
     }
 
@@ -96,10 +90,6 @@ diary list                  List all notes"
         fileCount=$(find $NOTES_DIR -name "$id*" | wc -l)
         if [[ $fileCount == 1 ]]
         then
-            if [[ ! -d $RECYCLE_BIN_DIR ]]
-            then
-                mkdir -p $RECYCLE_BIN_DIR
-            fi
             mv $file $RECYCLE_BIN_DIR
         elif [[ $fileCount = 0 ]]
         then
@@ -110,33 +100,23 @@ diary list                  List all notes"
     }
 
     __showNotesInRecycleBin() {
-        if [[ -d $RECYCLE_BIN_DIR ]]
-        then
-            find $RECYCLE_BIN_DIR -type f
-        else
-            echo "Recycle bin does not exist"
-        fi
+        find $RECYCLE_BIN_DIR -type f
     }
 
     __restoreNoteById() {
-        if [[ -d $RECYCLE_BIN_DIR ]]
+        id=$1
+        file=$(find $RECYCLE_BIN_DIR -name "$id*")
+        fileCount=$(find $RECYCLE_BIN_DIR -name "$id*" | wc -l)
+        if [[ $fileCount == 1 ]]
         then
-            id=$1
-            file=$(find $RECYCLE_BIN_DIR -name "$id*")
-            fileCount=$(find $RECYCLE_BIN_DIR -name "$id*" | wc -l)
-            if [[ $fileCount == 1 ]]
-            then
-                year=${file: -19:-15}
-                month=${file: -14:-12}
-                mv $file $RECYCLE_BIN_DIR/$year/$month
-            elif [[ $fileCount = 0 ]]
-            then
-                echo "Note not found"
-            else
-                echo "Too many notes are matched. Enter id more precisely"
-            fi
+            year=${file: -19:-15}
+            month=${file: -14:-12}
+            mv $file $NOTES_DIR/$year/$month
+        elif [[ $fileCount = 0 ]]
+        then
+            echo "Note not found"
         else
-            echo "Recycle bin does not exist"
+            echo "Too many notes are matched. Enter id more precisely"
         fi
     }
 
@@ -146,7 +126,8 @@ diary list                  List all notes"
         do
             id=${file: -58:-50}
             date=${file: -19:-9}
-            echo "$id   $date   $(head -c 60 $file)"
+            title=$(head -n 1 $file)
+            echo "$id   $date   ${title:0:60}"
         done
     }
 
@@ -163,6 +144,19 @@ diary list                  List all notes"
     fi
 
     source "$HOME/diary/.diaryrc"
+
+    if [[ ! -d $NOTES_DIR ]]
+    then
+        mkdir -p $NOTES_DIR
+    fi
+    if [[ ! -d $TEMPLATES_DIR ]]
+    then
+        mkdir -p $TEMPLATES_DIR
+    fi
+    if [[ ! -d $RECYCLE_BIN_DIR ]]
+    then
+        mkdir -p $RECYCLE_BIN_DIR
+    fi
 
     if [[ $# -eq 0 || $# -eq 1 && ($1 = "-h" || $1 = "--help" || $1 = "help") ]]
     then
@@ -197,9 +191,7 @@ diary list                  List all notes"
     elif [[ $# -eq 2 && $1 = "restore" ]]
     then
         __restoreNoteById $2
+    else
+        echo "Command not found"
     fi
-
-    echo "complete"
 }
-
-
