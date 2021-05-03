@@ -1,4 +1,5 @@
 ### Checklist title
-[x] first item
-[ ] second item
-[ ] third item
+
+- [x] first item
+- [ ] second item
+- [ ] third item
