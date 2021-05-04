@@ -71,12 +71,12 @@ diary list                  List all notes"
 
     __openNoteById() {
         id=$1
-        file=$(find $NOTES_DIR -name "$id*")
-        fileCount=$(find $NOTES_DIR -name "$id*" | wc -l)
+        file=$(find $NOTES_DIR -type f -name "$id*")
+        fileCount=$(find $NOTES_DIR -type f -name "$id*" | wc -l)
         if [[ $fileCount == 1 ]]
         then
             $TEXT_EDITOR $file
-        elif [[ $fileCount = 0 ]]
+        elif [[ $fileCount == 0 ]]
         then
             echo "Note not found"
         else
@@ -86,12 +86,12 @@ diary list                  List all notes"
 
     __deleteNoteById() {
         id=$1
-        file=$(find $NOTES_DIR -name "$id*")
-        fileCount=$(find $NOTES_DIR -name "$id*" | wc -l)
+        file=$(find $NOTES_DIR -type f -name "$id*")
+        fileCount=$(find $NOTES_DIR -type f -name "$id*" | wc -l)
         if [[ $fileCount == 1 ]]
         then
             mv $file $RECYCLE_BIN_DIR
-        elif [[ $fileCount = 0 ]]
+        elif [[ $fileCount == 0 ]]
         then
             echo "Note not found"
         else
@@ -105,14 +105,14 @@ diary list                  List all notes"
 
     __restoreNoteById() {
         id=$1
-        file=$(find $RECYCLE_BIN_DIR -name "$id*")
-        fileCount=$(find $RECYCLE_BIN_DIR -name "$id*" | wc -l)
+        file=$(find $RECYCLE_BIN_DIR -type f -name "$id*")
+        fileCount=$(find $RECYCLE_BIN_DIR -type f -name "$id*" | wc -l)
         if [[ $fileCount == 1 ]]
         then
             year=${file: -19:-15}
             month=${file: -14:-12}
             mv $file $NOTES_DIR/$year/$month
-        elif [[ $fileCount = 0 ]]
+        elif [[ $fileCount == 0 ]]
         then
             echo "Note not found"
         else
