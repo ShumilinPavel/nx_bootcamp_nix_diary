@@ -13,13 +13,17 @@
 
 ## Установка
 Для установки выполните следующую команду:  
-`bash -c "$(wget -O- https://raw.githubusercontent.com/ShumilinPavel/nx_bootcamp_nix_diary/master/install.sh)"; . $HOME/diary/diary.sh`
+```
+bash -c "$(wget -O- https://raw.githubusercontent.com/ShumilinPavel/nx_bootcamp_nix_diary/master/install.sh)"; . $HOME/diary/diary.sh
+```
 
 ## Удаление
 Для удаления выполните следующую команду:  
-`bash -c "$(wget -O- https://raw.githubusercontent.com/ShumilinPavel/nx_bootcamp_nix_diary/master/uninstall.sh)"`
+```
+bash -c "$(wget -O- https://raw.githubusercontent.com/ShumilinPavel/nx_bootcamp_nix_diary/master/uninstall.sh)"
+```
 
-## Пример конфигурации .diaryrc
+## Пример конфигурации .diaryrc 
 В директории `~/diary` содержится файл `.diaryrc`, в котором определены перменные окружения для задания параметров работы приложения.
 Конфигурация по умолчанию:
 ```shell
