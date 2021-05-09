@@ -1,4 +1,4 @@
-export NOTES_DIR="$HOME/diary/notes"
-export TEMPLATES_DIR="$HOME/diary/templates"
-export RECYCLE_BIN_DIR="$HOME/diary/recycle-bin"
-export TEXT_EDITOR="nano"
+NOTES_DIR="$HOME/diary/notes"
+TEMPLATES_DIR="$HOME/diary/templates"
+RECYCLE_BIN_DIR="$HOME/diary/recycle-bin"
+TEXT_EDITOR="nano"
