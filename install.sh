@@ -12,4 +12,15 @@ then
     source $HOME/.bashrc
 fi
 
-sudo apt-get install uuid-runtime
+if [ ! -x "$(uuidgen)" ]
+then
+  echo 'uuidgen is not installed' >&2
+  read -p "Do you want to install? [y/Y] " -n 1 -r
+  echo    # (optional) move to a new line
+  if [[ $REPLY =~ ^[Yy]$ ]]
+  then
+      sudo apt-get install uuid-runtime
+  else
+      echo "Installation is aborted"
+  fi
+fi
