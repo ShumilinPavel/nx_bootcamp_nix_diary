@@ -13,13 +13,17 @@
 
 ## Установка
 Для установки выполните следующую команду:  
-`bash -c "$(wget -O- https://raw.githubusercontent.com/ShumilinPavel/nx_bootcamp_nix_diary/develop/install.sh)"; . $HOME/diary/diary.sh`
+```
+bash -c "$(wget -O- https://raw.githubusercontent.com/ShumilinPavel/nx_bootcamp_nix_diary/master/install.sh)"; . $HOME/diary/diary.sh
+```
 
 ## Удаление
 Для удаления выполните следующую команду:  
-`bash -c "$(wget -O- https://raw.githubusercontent.com/ShumilinPavel/nx_bootcamp_nix_diary/develop/uninstall.sh)"`
+```
+bash -c "$(wget -O- https://raw.githubusercontent.com/ShumilinPavel/nx_bootcamp_nix_diary/master/uninstall.sh)"
+```
 
-## Пример конфигурации .diaryrc
+## Пример конфигурации .diaryrc 
 В директории `~/diary` содержится файл `.diaryrc`, в котором определены перменные окружения для задания параметров работы приложения.
 Конфигурация по умолчанию:
 ```shell
@@ -68,7 +72,7 @@ shumilin@DESKTOP-VTF39FM:~$ diary open 8e
 shumilin@DESKTOP-VTF39FM:~$ diary open 8e6
 shumilin@DESKTOP-VTF39FM:~$ diary open 8e65
 ```
-Дригие примеры использования команд:
+Другие примеры использования команд:
 ```
 shumilin@DESKTOP-VTF39FM:~$ diary stats
 Total notes: 3
