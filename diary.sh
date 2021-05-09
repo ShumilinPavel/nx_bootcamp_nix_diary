@@ -4,14 +4,14 @@ diary() {
     __generateFileName() {
         year=$(date +%Y)
         month=$(date +%m)
-        directoryName="$NOTES_DIR/$year/$month"
-        if [ ! -d $directoryName ]
+        notesPath="$NOTES_DIR/$year/$month"
+        if [ ! -d $notesPath ]
         then
-            mkdir -p $directoryName
+            mkdir -p $notesPath
         fi
         id=$(uuidgen)
         timestamp=$(date +%Y-%m-%d_%H-%M)
-        echo "$directoryName/${id}___$timestamp.md"
+        echo "$notesPath/${id}___$timestamp.md"
     }
 
     __createNote() {
